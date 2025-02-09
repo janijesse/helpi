@@ -12,8 +12,10 @@ import "hardhat-deploy";
 import "hardhat-deploy-ethers";
 import { task } from "hardhat/config";
 import generateTsAbis from "./scripts/generateTsAbis";
+require("@nomicfoundation/hardhat-verify");
 
-const deployerPrivateKey = process.env.PRIVATE_KEY || "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
+
+const deployerPrivateKey = process.env.PRIVATE_KEY || "8ca2e53914e491e0dbc6d4554d4b8bbe2f46d46c291c29c6871c5c26addff0e0";
 const FUJI_RPC_URL = process.env.FUJI_RPC_URL || "https://avax-fuji.g.alchemy.com/v2/YkvoQ9LLSB3b6BCaPj5r9y8OyPEes8JF";
 const BSC_TESTNET_RPC_URL = process.env.BSC_TESTNET_RPC_URL || "https://bnb-testnet.g.alchemy.com/v2/YkvoQ9LLSB3b6BCaPj5r9y8OyPEes8JF";
 
