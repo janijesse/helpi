@@ -1,0 +1,36 @@
+{
+  "language": "Solidity",
+  "sources": {
+    "contracts/helpi.sol": {
+      "content": "\n// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract Helpi {\n    struct Project {\n        string name;\n        address owner;\n        uint256 requestedAmount;\n        uint256 raisedAmount;\n        bool approved;\n        bool completed;\n    }\n\n    address public aiAgent;\n    Project[] public projects;\n    mapping(address => uint256) public donations;\n\n    event ProjectCreated(uint256 id, string name, address owner);\n    event ProjectApproved(uint256 id);\n    event DonationReceived(uint256 id, address donor, uint256 amount);\n    event ProjectCompleted(uint256 id, address owner);\n\n    modifier onlyAIAgent() {\n        require(msg.sender == aiAgent, \"Only AI agent can approve\");\n        _;\n    }\n\n    constructor(address _aiAgent) {\n        aiAgent = _aiAgent;\n    }\n\n    function createProject(string memory _name, uint256 _requestedAmount) public {\n        projects.push(Project(_name, msg.sender, _requestedAmount, 0, false, false));\n        emit ProjectCreated(projects.length - 1, _name, msg.sender);\n    }\n\n    function approveProject(uint256 _id) public onlyAIAgent {\n        require(_id < projects.length, \"Project does not exist\");\n        projects[_id].approved = true;\n        emit ProjectApproved(_id);\n    }\n\n    function donate(uint256 _id) public payable {\n        require(_id < projects.length, \"Project does not exist\");\n        require(projects[_id].approved, \"Project not approved\");\n        require(msg.value > 0, \"Donation must be greater than 0\");\n\n        projects[_id].raisedAmount += msg.value;\n        donations[msg.sender] += msg.value;\n\n        emit DonationReceived(_id, msg.sender, msg.value);\n    }\n\n    function withdrawFunds(uint256 _id) public {\n        require(_id < projects.length, \"Project does not exist\");\n        require(msg.sender == projects[_id].owner, \"Not authorized\");\n        require(projects[_id].raisedAmount >= projects[_id].requestedAmount, \"Funding goal not met\");\n        require(!projects[_id].completed, \"Funds already withdrawn\");\n\n        payable(msg.sender).transfer(projects[_id].raisedAmount);\n        projects[_id].completed = true;\n        emit ProjectCompleted(_id, msg.sender);\n    }\n}\n"
+    }
+  },
+  "settings": {
+    "optimizer": {
+      "enabled": true,
+      "runs": 200
+    },
+    "evmVersion": "paris",
+    "outputSelection": {
+      "*": {
+        "*": [
+          "abi",
+          "evm.bytecode",
+          "evm.deployedBytecode",
+          "evm.methodIdentifiers",
+          "metadata",
+          "devdoc",
+          "userdoc",
+          "storageLayout",
+          "evm.gasEstimates"
+        ],
+        "": [
+          "ast"
+        ]
+      }
+    },
+    "metadata": {
+      "useLiteralContent": true
+    }
+  }
+}
