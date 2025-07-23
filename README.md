@@ -1,5 +1,5 @@
 A platform that helps people with social project to get a donation with rewards for donors
-n AI measures the risk level to approve the projects to which donations will be made, then the smart contracts are programmed to:
+An AI measures the risk level to approve the projects to which donations will be made, then the smart contracts are programmed to:
 1.Offer the accepted projects to the donors
 
 2. Execute the sending of money to the beneficiary
